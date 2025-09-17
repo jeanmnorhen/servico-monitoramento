@@ -8,7 +8,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 from confluent_kafka import Consumer, KafkaException
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) 
 
 # --- InfluxDB Configuration ---
 influxdb_client = None
