@@ -159,7 +159,10 @@ def health_check():
     kafka_status = "error"
     if kafka_consumer:
         kafka_status = "ok"
-        kafka_consumer.close()
+        try:
+            kafka_consumer.close()
+        except Exception as e:
+            print(f"Error closing Kafka consumer during health check: {e}")
 
 
     status = {
