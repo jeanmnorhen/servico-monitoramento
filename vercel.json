@@ -16,7 +16,7 @@
   "crons": [
     {
       "path": "/api/monitoring/consume",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
