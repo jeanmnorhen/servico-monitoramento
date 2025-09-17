@@ -115,17 +115,19 @@ def consume_and_write_prices():
 @app.route('/api/monitoring/prices', methods=['GET'])
 def get_price_history():
     if not influxdb_client:
-        return jsonify({"error": "InfluxDB não está inicializado."}),
+        return jsonify({"error": "InfluxDB não está inicializado."}), 503
 
     product_id = request.args.get('product_id')
     if not product_id:
-        return jsonify({"error": "Parâmetro 'product_id' é obrigatório."}),
+        return jsonify({"error": "Parâmetro 'product_id' é obrigatório."}), 400
 
     query_api = influxdb_client.query_api()
-    query = f'from(bucket: "{influxdb_bucket}") \
-              |> range(start: -30d) \
-              |> filter(fn: (r) => r._measurement == "offer_price" and r.product_id == "{product_id}") \
-              |> yield(name: "mean")'
+    query = f'''
+        from(bucket: "{influxdb_bucket}")
+          |> range(start: -30d)
+          |> filter(fn: (r) => r._measurement == "offer_price")
+          |> filter(fn: (r) => r.product_id == "{product_id}")
+    '''
     
     try:
         tables = query_api.query(query, org=os.environ.get('INFLUXDB_ORG'))
@@ -139,6 +141,7 @@ def get_price_history():
                 })
         return jsonify({"data": results}), 200
     except Exception as e:
+        print(f"Error querying InfluxDB: {e}")
         return jsonify({"error": f"Erro ao buscar histórico de preços: {e}"}), 500
 
 # --- Health Check (para Vercel) ---
