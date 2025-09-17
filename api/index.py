@@ -167,7 +167,7 @@ def health_check():
 
 
     status = {
-        "influxdb": influxdb_status,
+        "influxdb": influx_status,
         "kafka_consumer": kafka_status
     }
     http_status = 200 if all(s == "ok" for s in status.values()) else 503
