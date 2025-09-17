@@ -10,6 +10,7 @@ from confluent_kafka import Consumer, KafkaException
 app = Flask(__name__)
 CORS(app) 
 
+
 # --- InfluxDB Configuration ---
 influxdb_client = None
 influxdb_write_api = None
